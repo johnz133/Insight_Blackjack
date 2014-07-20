@@ -5,6 +5,7 @@ public class Player {
 	private String name;
 	private int money;
 	private List<Card> hand;
+	private int numAce;
 	
 	public Player(String name, int money) {
 		this.name = name;
@@ -59,36 +60,39 @@ public class Player {
 	public String total() {
 		int tot = 0;
 		int totWithAce = 0;
-		int numAce = 0;
-		if(hasAce()){
+		int workingAce = countAce();
+		if(workingAce > 0){
 			for(Card c : hand){
 				if(c.getRank().toString() != "Ace") {
 					totWithAce += c.getValue();
 				}
 				else {
 					totWithAce += 11;
-					numAce++;
 				}
 			}
 			tot = totWithAce - numAce*10;
-			if(totWithAce > 21)
-				numAce = 0;
+			//player bust, recalculate with ace == 1
+			while(totWithAce > 21 && numAce > 0){
+				totWithAce -= 10;
+				workingAce--;
+			}
 		}
 		else {
 			for(Card c : hand){
 				tot += c.getValue();
 			}
 		}
-		return (numAce > 0) ? "" + tot + "/" +totWithAce : "" + tot;
+		return (workingAce > 0) ? "" + tot + "/" +totWithAce : "" + tot;
 	}
 	
 	//helper methods
-	private boolean hasAce() {
+	private int countAce() {
+		numAce = 0;
 		for(Card c : hand) {
 			if(c.getRank().toString() == "Ace")
-				return true;
+				numAce++;
 		}
-		return false;
+		return numAce;
 	}
 	
 	public boolean canSplit() {

@@ -118,6 +118,13 @@ public class Blackjack {
 	
 	private static void playerHit() {
 		System.out.println("You have chosen to hit.");
+		
+	}
+	
+	private static void dealerHit() {
+		//dealer must hit until 17+
+		//if dealer busts, you win
+		//but if dealer busts, and has an Ace, then he continues with ace = 1
 	}
 	
 }
