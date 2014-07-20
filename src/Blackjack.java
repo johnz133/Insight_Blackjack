@@ -1,8 +1,8 @@
 import java.io.*;
 
 public class Blackjack {
-	private static Player player;
-	private static BufferedReader br;
+	private Player player;
+	private BufferedReader br;
 	/*
 	 * Insight Data Engineering Fellows Program - Coding Challenge
 	We'd like you to implement a text-based Blackjack (http://en.wikipedia.org/wiki/Blackjack) 
@@ -23,8 +23,8 @@ public class Blackjack {
 	//Split
 	//
 	
-	public static void main(String [] args) {
-		br = new BufferedReader(new InputStreamReader(System.in));
+	public void main(String [] args) {
+		this.br = new BufferedReader(new InputStreamReader(System.in));
 		initialize();
 		//Game loop
 		while(player.getMoney() > 0) {
@@ -34,7 +34,7 @@ public class Blackjack {
 	}
 	
 	//Initialize player
-	private static void initialize() {
+	private void initialize() {
 		player = new Player();
 		System.out.println("Welcome message. ");
 		System.out.println("Name?");
@@ -47,7 +47,7 @@ public class Blackjack {
 		player.setMoney(100);
 	}
 	
-	private static void gameRound() {
+	private void gameRound() {
 		int playerMoney = player.getMoney();
 		int betAmount = 0;
 		System.out.println("You're current total is $" + playerMoney + ", " +player.getName());

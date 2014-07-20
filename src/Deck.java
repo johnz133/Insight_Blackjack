@@ -1,16 +1,16 @@
 
 public class Deck {
-	private static int[] cards;
+	private Card[] cards;
 	
-	public static void init() {
-		cards = new int[52]; 
+	public void initialize() {
+		
 	}
 	
-	public static int getCard() {
+	public int getCard() {
 		return 0;
 	}
 	
-	public static void shuffle() {
+	public void shuffle() {
 		
 	}
 }
