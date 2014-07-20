@@ -14,7 +14,7 @@ public class Player {
 	
 	//Set methods	
 	public void setName(String name) {
-		
+		this.name = name;
 	}
 	
 	public void setMoney(int money) {
@@ -68,6 +68,8 @@ public class Player {
 				}
 			}
 			tot = totWithAce - numAce*10;
+			if(totWithAce > 21)
+				numAce = 0;
 		}
 		else {
 			for(Card c : hand){
@@ -83,5 +85,9 @@ public class Player {
 				return true;
 		}
 		return false;
+	}
+	
+	public boolean canSplit() {
+		return hand.size() == 2 && hand.get(0).getValue() == hand.get(1).getValue();
 	}
 }

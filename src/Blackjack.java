@@ -24,7 +24,7 @@ public class Blackjack {
 	//At least 1 per hand
 	//Optional:
 	//Split
-	//
+	//double down
 	
 	public static void main(String [] args) {
 		br = new BufferedReader(new InputStreamReader(System.in));
@@ -32,7 +32,7 @@ public class Blackjack {
 		//Game loop
 		while(player.getMoney() > 0) {
 			startRound();
-			System.out.println("");
+			playerMove();
 		}
 		
 	}
@@ -74,7 +74,20 @@ public class Blackjack {
 		player.addCard(deck.getNextCard());
 		player.addCard(deck.getNextCard());
 		
-		System.out.println("You were dealt " + player.readHand() + ", total value: " + player.total()) ;
+		System.out.println("You were dealt [" + player.readHand() + "], total value: [" + player.total() + "].");
+		System.out.println("The dealer has a [" + dealerHand.get(0).readCard() + "], value: [" + dealerHand.get(0).getValue() + "].");
+		System.out.println();
+	}
+	
+	private static void playerMove() {
+		System.out.println("Choose move (enter option number): ");
+		System.out.println("1. Stand");
+		System.out.println("2. Hit");
+		if(player.canSplit()){
+			//Not implemented yet
+			//System.out.println("3. Split");
+		}
+		
 	}
 	
 	
