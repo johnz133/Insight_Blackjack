@@ -1,12 +1,15 @@
+import java.util.*;
+
 
 public class Player {
 	private String name;
 	private int money;
-	private Card[] hand;
+	private List<Card> hand;
 	
 	public Player(String name, int money) {
 		this.name = name;
 		this.money = money;
+		hand = new ArrayList<Card>();
 	}
 	//Set methods	
 	
@@ -28,8 +31,8 @@ public class Player {
 	}
 	
 	//Game methods
-	public void addCard() {
-		 
+	public void addCard(Card card) {
+		 hand.add(card);
 	}
 	
 }

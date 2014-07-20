@@ -1,9 +1,11 @@
 import java.io.*;
+import java.util.*;
 
 public class Blackjack {
 	private Player player;
 	private BufferedReader br;
 	private Deck deck;
+	private List<Card> dealerHand;
 	/*
 	 * Insight Data Engineering Fellows Program - Coding Challenge
 	We'd like you to implement a text-based Blackjack (http://en.wikipedia.org/wiki/Blackjack) 
@@ -29,7 +31,7 @@ public class Blackjack {
 		initialize();
 		//Game loop
 		while(player.getMoney() > 0) {
-			gameRound();
+			startRound();
 		}
 		
 	}
@@ -37,8 +39,8 @@ public class Blackjack {
 	//Initialize player
 	private void initialize() {
 		player = new Player("Player", 100);
-		System.out.println("Welcome message. ");
-		System.out.println("Name?");
+		System.out.println("Welcome to Insight Resort and Casino's Blackjack table.");
+		System.out.println("What is your name?");
 		try { 
 			player.setName(br.readLine());
 		} catch(IOException ioe) {
@@ -47,10 +49,10 @@ public class Blackjack {
 		}
 		player.setMoney(100);
 		deck = new Deck();
-		
 	}
 	
-	private void gameRound() {
+	private void startRound() {
+		//set the bet
 		int playerMoney = player.getMoney();
 		int betAmount = 0;
 		System.out.println("You're current total is $" + playerMoney + ", " +player.getName());
@@ -62,7 +64,14 @@ public class Blackjack {
 			System.exit(1);
 		}
 		player.setMoney(playerMoney - betAmount);
-		deck.shuffle();
 		
+		//shuffle deck, then deal first cards
+		deck.shuffle();
+		dealerHand = new ArrayList<Card>();
+		dealerHand.add(deck.getNextCard());
+		player.addCard(deck.getNextCard());
+		player.addCard(deck.getNextCard());
 	}
+	
+	
 }
