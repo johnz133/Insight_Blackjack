@@ -4,12 +4,12 @@ public class Player {
 	private int money;
 	
 	//Set Methods
-	public void setName(String userName) {
-		name = userName;
+	public void setName(String name) {
+		this.name = name;
 	}
 	
-	public void setMoney(int amount) {
-		money = amount;
+	public void setMoney(int money) {
+		this.money = money;
 	}
 	
 	//Get Methods

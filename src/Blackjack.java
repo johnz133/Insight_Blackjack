@@ -24,7 +24,7 @@ public class Blackjack {
 	//
 	
 	public void main(String [] args) {
-		this.br = new BufferedReader(new InputStreamReader(System.in));
+		br = new BufferedReader(new InputStreamReader(System.in));
 		initialize();
 		//Game loop
 		while(player.getMoney() > 0) {
