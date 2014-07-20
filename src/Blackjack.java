@@ -26,10 +26,14 @@ public class Blackjack {
 	public static void main(String [] args) {
 		br = new BufferedReader(new InputStreamReader(System.in));
 		initialize();
-		System.out.println("How much will you bet?");
+		//Game loop
+		while(player.getMoney() > 0) {
+			gameRound();
+		}
 		
 	}
 	
+	//Initialize player
 	private static void initialize() {
 		player = new Player();
 		System.out.println("Welcome message. ");
@@ -41,5 +45,19 @@ public class Blackjack {
 			System.exit(1);
 		}
 		player.setMoney(100);
+	}
+	
+	private static void gameRound() {
+		int playerMoney = player.getMoney();
+		int betAmount = 0;
+		System.out.println("You're current total is $" + playerMoney + ", " +player.getName());
+		System.out.println("How much will you bet?");
+		try {
+			betAmount = Integer.parseInt(br.readLine());
+		} catch(IOException ioe) {
+			System.out.println("Error trying to read bet amount!");
+			System.exit(1);
+		}
+		player.setMoney(playerMoney - betAmount);
 	}
 }
