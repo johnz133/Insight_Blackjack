@@ -17,4 +17,8 @@ public class Card {
 	public Suits getSuit() {
 		return suit;
 	}
+	
+	public String readCard() {
+		return rank + " of " + suit;
+	}
 }

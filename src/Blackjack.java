@@ -2,10 +2,10 @@ import java.io.*;
 import java.util.*;
 
 public class Blackjack {
-	private Player player;
-	private BufferedReader br;
-	private Deck deck;
-	private List<Card> dealerHand;
+	private static Player player;
+	private static BufferedReader br;
+	private static Deck deck;
+	private static List<Card> dealerHand;
 	/*
 	 * Insight Data Engineering Fellows Program - Coding Challenge
 	We'd like you to implement a text-based Blackjack (http://en.wikipedia.org/wiki/Blackjack) 
@@ -26,18 +26,19 @@ public class Blackjack {
 	//Split
 	//
 	
-	public void main(String [] args) {
+	public static void main(String [] args) {
 		br = new BufferedReader(new InputStreamReader(System.in));
 		initialize();
 		//Game loop
 		while(player.getMoney() > 0) {
 			startRound();
+			System.out.println("");
 		}
 		
 	}
 	
 	//Initialize player
-	private void initialize() {
+	private static void initialize() {
 		player = new Player("Player", 100);
 		System.out.println("Welcome to Insight Resort and Casino's Blackjack table.");
 		System.out.println("What is your name?");
@@ -51,11 +52,11 @@ public class Blackjack {
 		deck = new Deck();
 	}
 	
-	private void startRound() {
+	private static void startRound() {
+		player.clearHand();
 		//set the bet
-		int playerMoney = player.getMoney();
 		int betAmount = 0;
-		System.out.println("You're current total is $" + playerMoney + ", " +player.getName());
+		System.out.println("You're current total is $" + player.getMoney() + ", " + player.getName() +".");
 		System.out.println("How much will you bet?");
 		try {
 			betAmount = Integer.parseInt(br.readLine());
@@ -63,7 +64,8 @@ public class Blackjack {
 			System.out.println("Error trying to read bet amount!");
 			System.exit(1);
 		}
-		player.setMoney(playerMoney - betAmount);
+		player.setMoney(player.getMoney() - betAmount);
+		System.out.println("Your total is now $" + player.getMoney() + ".");
 		
 		//shuffle deck, then deal first cards
 		deck.shuffle();
@@ -71,6 +73,8 @@ public class Blackjack {
 		dealerHand.add(deck.getNextCard());
 		player.addCard(deck.getNextCard());
 		player.addCard(deck.getNextCard());
+		
+		System.out.println("You were dealt " + player.readHand());
 	}
 	
 	
