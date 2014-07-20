@@ -77,17 +77,14 @@ public class Player {
 					higherValue += 11;
 				}
 			}
-			value = higherValue - numAce*10;
 			//player bust, recalculate with ace == 1
-			while(higherValue > 21 && numAce > 0){
+			while(higherValue > 21 && workingAce > 0){
 				higherValue -= 10;
 				workingAce--;
 			}
 		}
-		else {
-			for(Card c : hand){
-				value += c.getValue();
-			}
+		for(Card c : hand){
+			value += c.getValue();
 		}
 		return (workingAce > 0) ? "" + value + "/" + higherValue : "" + value;
 	}
@@ -95,7 +92,7 @@ public class Player {
 	//returns the higher of the two values
 	public int value() {
 		total();
-		return (higherValue > 0) ? higherValue : value;
+		return (higherValue > 0 && higherValue <= 21) ? higherValue : value;
 	}
 	
 	//helper methods

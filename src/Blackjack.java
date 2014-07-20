@@ -144,7 +144,7 @@ public class Blackjack {
 	private static boolean playerHit() {
 		System.out.println("You have chosen to hit.");
 		player.addCard(deck.getNextCard());
-		System.out.println("You now have [" + player.readHand() + "], total value: [" + player.total() + "].");
+		System.out.println("You now have [" + player.readHand() + "], total value: [" + player.value() + "].");
 		if(player.value() > 21){
 			System.out.println("Bust! You lose!");
 			System.out.println("You now have $" + player.getMoney() + ".");
