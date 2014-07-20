@@ -39,17 +39,19 @@ public class Player {
 	}
 		
 	public String readHand() {
-		String str = "";
-		if(hand.size()==2){
-			str += hand.get(0).readCard() + " and " + hand.get(1).readCard();
-		}
+		if(hand.size() == 1) {
+			return hand.get(0).readCard();
+		} else if(hand.size()==2){
+			return hand.get(0).readCard() + " and " + hand.get(1).readCard();
+		} 
 		else {
-			for(int i = 0; i < hand.size() - 1; i++) {
+			String str = "";
+			for(int i = 0; i < hand.size(); i++) {
 				str += hand.get(i).readCard() +  ", "; 
 			}
-			str += "and " + hand.get(-1).readCard();
+			str += "and " + hand.get(hand.size()).readCard();
+			return str;
 		}
-		return str;
 	}
 	
 	//return the total value(s) of the hand, depending on ace
@@ -79,6 +81,7 @@ public class Player {
 		return (numAce > 0) ? "" + tot + "/" +totWithAce : "" + tot;
 	}
 	
+	//helper methods
 	private boolean hasAce() {
 		for(Card c : hand){
 			if(c.getRank().toString() == "Ace")

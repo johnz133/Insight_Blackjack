@@ -3,9 +3,9 @@ import java.util.*;
 
 public class Blackjack {
 	private static Player player;
+	private static Player house;
 	private static BufferedReader br;
 	private static Deck deck;
-	private static List<Card> dealerHand;
 	/*
 	 * Insight Data Engineering Fellows Program - Coding Challenge
 	We'd like you to implement a text-based Blackjack (http://en.wikipedia.org/wiki/Blackjack) 
@@ -37,10 +37,11 @@ public class Blackjack {
 		
 	}
 	
-	//Initialize player
+	//Initialize player and house
 	private static void initialize() {
 		player = new Player("Player", 100);
-		System.out.println("Welcome to Insight Resort and Casino's Blackjack table.");
+		house = new Player("House", 100);
+		System.out.println("Welcome to Insight Resort and Casino's Blackjack table! ");
 		System.out.println("What is your name?");
 		try { 
 			player.setName(br.readLine());
@@ -49,11 +50,13 @@ public class Blackjack {
 			System.exit(1);
 		}
 		player.setMoney(100);
+		//System.out.println("Hello, "+ G)
 		deck = new Deck();
 	}
 	
 	private static void startRound() {
 		player.clearHand();
+		house.clearHand();
 		//set the bet
 		int betAmount = 0;
 		System.out.println("You're current total is $" + player.getMoney() + ", " + player.getName() +".");
@@ -69,13 +72,12 @@ public class Blackjack {
 		
 		//shuffle deck, then deal first cards
 		deck.shuffle();
-		dealerHand = new ArrayList<Card>();
-		dealerHand.add(deck.getNextCard());
 		player.addCard(deck.getNextCard());
+		house.addCard(deck.getNextCard());
 		player.addCard(deck.getNextCard());
 		
 		System.out.println("You were dealt [" + player.readHand() + "], total value: [" + player.total() + "].");
-		System.out.println("The dealer has a [" + dealerHand.get(0).readCard() + "], value: [" + dealerHand.get(0).getValue() + "].");
+		System.out.println("The dealer has a [" + house.readHand() + "], value: [" + house.total() + "].");
 		System.out.println();
 	}
 	
