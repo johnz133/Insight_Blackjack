@@ -3,6 +3,7 @@ import java.io.*;
 public class Blackjack {
 	private Player player;
 	private BufferedReader br;
+	private Deck deck;
 	/*
 	 * Insight Data Engineering Fellows Program - Coding Challenge
 	We'd like you to implement a text-based Blackjack (http://en.wikipedia.org/wiki/Blackjack) 
@@ -35,7 +36,7 @@ public class Blackjack {
 	
 	//Initialize player
 	private void initialize() {
-		player = new Player();
+		player = new Player("Player", 100);
 		System.out.println("Welcome message. ");
 		System.out.println("Name?");
 		try { 
@@ -45,6 +46,8 @@ public class Blackjack {
 			System.exit(1);
 		}
 		player.setMoney(100);
+		deck = new Deck();
+		
 	}
 	
 	private void gameRound() {
@@ -59,5 +62,7 @@ public class Blackjack {
 			System.exit(1);
 		}
 		player.setMoney(playerMoney - betAmount);
+		deck.shuffle();
+		
 	}
 }

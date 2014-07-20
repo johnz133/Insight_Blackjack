@@ -1,16 +1,32 @@
+import java.util.*;
 
 public class Deck {
-	private Card[] cards;
+	private List<Card> cards;
+	private Iterator<Card> iter;
 	
-	public void initialize() {
-		
+	//Initialize the deck of 52 cards, not shuffled
+	public Deck() {
+		cards = new ArrayList<Card>();
+		for(Suits s : Suits.values()) {
+			for(Ranks r : Ranks.values()) {
+				cards.add(new Card(s,r));
+			}
+		}
 	}
 	
-	public int getCard() {
-		return 0;
+	//return the next card in the iterator
+	//if no more cards, reshuffle deck
+	public Card getNextCard() {
+		if(!iter.hasNext()){
+			Collections.shuffle(cards);
+			iter = cards.iterator();
+		}
+		return iter.next();
 	}
 	
+	//shuffle deck
 	public void shuffle() {
-		
+		Collections.shuffle(cards);
+		iter = cards.iterator();
 	}
 }
