@@ -18,7 +18,13 @@ public class Card {
 		return suit;
 	}
 	
+	//return english reading of card
 	public String readCard() {
 		return rank + " of " + suit;
+	}
+	
+	//return integer value of card
+	public int getValue() {
+		return rank.getValue();
 	}
 }

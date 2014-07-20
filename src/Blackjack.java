@@ -74,7 +74,7 @@ public class Blackjack {
 		player.addCard(deck.getNextCard());
 		player.addCard(deck.getNextCard());
 		
-		System.out.println("You were dealt " + player.readHand());
+		System.out.println("You were dealt " + player.readHand() + ", total value: " + player.total()) ;
 	}
 	
 	

@@ -11,6 +11,7 @@ public class Player {
 		this.money = money;
 		hand = new ArrayList<Card>();
 	}
+	
 	//Set methods	
 	public void setName(String name) {
 		
@@ -49,5 +50,38 @@ public class Player {
 			str += "and " + hand.get(-1).readCard();
 		}
 		return str;
+	}
+	
+	//return the total value(s) of the hand, depending on ace
+	public String total() {
+		int tot = 0;
+		int totWithAce = 0;
+		int numAce = 0;
+		if(hasAce()){
+			for(Card c : hand){
+				if(c.getRank().toString() != "Ace") {
+					totWithAce += c.getValue();
+				}
+				else {
+					totWithAce += 11;
+					numAce++;
+				}
+			}
+			tot = totWithAce - numAce*10;
+		}
+		else {
+			for(Card c : hand){
+				tot += c.getValue();
+			}
+		}
+		return (numAce > 0) ? "" + tot + "/" +totWithAce : "" + tot;
+	}
+	
+	private boolean hasAce() {
+		for(Card c : hand){
+			if(c.getRank().toString() == "Ace")
+				return true;
+		}
+		return false;
 	}
 }
