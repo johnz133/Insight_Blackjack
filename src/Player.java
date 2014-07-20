@@ -6,11 +6,15 @@ public class Player {
 	private int money;
 	private List<Card> hand;
 	private int numAce;
+	private int value;
+	private int higherValue;
 	
 	public Player(String name, int money) {
 		this.name = name;
 		this.money = money;
 		hand = new ArrayList<Card>();
+		this.value = 0;
+		this.higherValue = 0;
 	}
 	
 	//Set methods	
@@ -28,6 +32,8 @@ public class Player {
 	
 	public void clearHand() {
 		hand.clear();
+		value = 0;
+		higherValue = 0;
 	}
 	
 	//Get methods
@@ -58,31 +64,35 @@ public class Player {
 	
 	//return the total value(s) of the hand, depending on ace
 	public String total() {
-		int tot = 0;
-		int totWithAce = 0;
+		value = 0;
+		higherValue = 0;
 		int workingAce = countAce();
 		if(workingAce > 0){
 			for(Card c : hand){
 				if(c.getRank().toString() != "Ace") {
-					totWithAce += c.getValue();
+					higherValue += c.getValue();
 				}
 				else {
-					totWithAce += 11;
+					higherValue += 11;
 				}
 			}
-			tot = totWithAce - numAce*10;
+			value = higherValue - numAce*10;
 			//player bust, recalculate with ace == 1
-			while(totWithAce > 21 && numAce > 0){
-				totWithAce -= 10;
+			while(higherValue > 21 && numAce > 0){
+				higherValue -= 10;
 				workingAce--;
 			}
 		}
 		else {
 			for(Card c : hand){
-				tot += c.getValue();
+				value += c.getValue();
 			}
 		}
-		return (workingAce > 0) ? "" + tot + "/" +totWithAce : "" + tot;
+		return (workingAce > 0) ? "" + value + "/" + higherValue : "" + value;
+	}
+	
+	public int value() {
+		return (higherValue > 0) ? higherValue : value;
 	}
 	
 	//helper methods
