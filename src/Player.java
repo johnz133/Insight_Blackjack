@@ -54,15 +54,16 @@ public class Player {
 		} 
 		else {
 			String str = "";
-			for(int i = 0; i < hand.size(); i++) {
+			for(int i = 0; i < hand.size() - 1; i++) {
 				str += hand.get(i).readCard() +  ", "; 
 			}
-			str += "and " + hand.get(hand.size()).readCard();
+			str += "and " + hand.get(hand.size() - 1).readCard();
 			return str;
 		}
 	}
 	
 	//return the total value(s) of the hand, depending on ace
+	//updates value and higherValue
 	public String total() {
 		value = 0;
 		higherValue = 0;
@@ -91,7 +92,9 @@ public class Player {
 		return (workingAce > 0) ? "" + value + "/" + higherValue : "" + value;
 	}
 	
+	//returns the higher of the two values
 	public int value() {
+		total();
 		return (higherValue > 0) ? higherValue : value;
 	}
 	

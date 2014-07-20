@@ -1,11 +1,11 @@
 import java.io.*;
-import java.util.StringTokenizer;
 
 public class Blackjack {
 	private static Player player;
 	private static Player house;
 	private static BufferedReader br;
 	private static Deck deck;
+	private static int betAmount;
 	/*
 	 * Insight Data Engineering Fellows Program - Coding Challenge
 	We'd like you to implement a text-based Blackjack (http://en.wikipedia.org/wiki/Blackjack) 
@@ -28,11 +28,13 @@ public class Blackjack {
 	
 	public static void main(String [] args) {
 		br = new BufferedReader(new InputStreamReader(System.in));
+		boolean playAgain = true;
 		initialize();
 		//Game loop
-		while(player.getMoney() > 0) {
+		while(player.getMoney() > 0 && playAgain) {
 			startRound();
 			playerMove();
+			playAgain = askPlayAgain();
 		}
 		
 	}
@@ -50,7 +52,6 @@ public class Blackjack {
 			System.exit(1);
 		}
 		player.setMoney(100);
-		//System.out.println("Hello, "+ G)
 		deck = new Deck();
 	}
 	
@@ -58,12 +59,12 @@ public class Blackjack {
 		player.clearHand();
 		house.clearHand();
 		//set the bet
-		int betAmount = 0;
+		betAmount = 0;
 		System.out.println("You're current total is $" + player.getMoney() + ", " + player.getName() +".");
 		System.out.println("How much will you bet?");
 		try {
 			betAmount = Integer.parseInt(br.readLine());
-		} catch(Exception ioe) {
+		} catch(Exception e) {
 			System.out.println("Error trying to read bet amount!");
 			System.exit(1);
 		}
@@ -75,22 +76,21 @@ public class Blackjack {
 		player.addCard(deck.getNextCard());
 		System.out.println("You were dealt [" + player.readHand() + "].");
 		house.addCard(deck.getNextCard());
-		System.out.println("The dealer was dealth [" + house.readHand() + "], value: [" + house.total() + "].");
+		System.out.println("The house was dealt [" + house.readHand() + "], value: [" + house.total() + "].");
 		player.addCard(deck.getNextCard());		
 		System.out.println("You were dealt [" + player.readHand() + "], total value: [" + player.total() + "].");
 		System.out.println();
 	}
 	
 	private static void playerMove() {
-		System.out.println("Choose move (enter option number): ");
-		System.out.println("1. Stand");
-		System.out.println("2. Hit");
+		displayOptions();
 		if(player.canSplit()){
 			//Not implemented yet
 			//System.out.println("3. Split");
 		}
 		int playerChoice = 0;
-		while(!(playerChoice == 1 || playerChoice == 2)){
+		boolean playerAlive = true;
+		while(!(playerChoice == 1) && playerAlive){
 			try{
 				playerChoice = Integer.parseInt(br.readLine());
 				switch(playerChoice){
@@ -98,13 +98,13 @@ public class Blackjack {
 						playerStand();
 					break;
 					case(2):
-						playerHit();
+						playerAlive = playerHit();
 					break;
 					default:
 						System.out.println("Not an option! Please enter 1 or 2.");
 					break;
 				}
-			} catch(Exception ioe) {
+			} catch(IOException ioe) {
 				System.out.println("Error reading choice option!");
 				System.exit(1);
 			}
@@ -112,37 +112,78 @@ public class Blackjack {
 		
 	}
 	
+	private static void displayOptions() {
+		System.out.println("Choose move (enter option number): ");
+		System.out.println("1. Stand");
+		System.out.println("2. Hit");
+	}
 	private static void playerStand() {
-		System.out.println("You have chosen to stand.");
-		
+		System.out.println("You have chosen to stand at [" + player.value() + "].");
+		houseHit();
+		if(house.value() <= 21){
+			System.out.println("The house stands at [" + house.value() + "].");
+			if(player.value() < house.value()) {
+				System.out.println("You lose.");
+			}
+			else if(player.value() > house.value()){
+				System.out.println("You win!");
+				player.setMoney(player.getMoney() + betAmount*2);
+			}
+			else {
+				System.out.println("Draw!");
+				player.setMoney(player.getMoney() + betAmount);
+			}
+		}
+		else {
+			System.out.println("The house busts! You win!");
+			player.setMoney(player.getMoney() + betAmount*2);
+		}
+		System.out.println("You now have $" + player.getMoney() + ".");
 	}
 	
-	private static void playerHit() {
+	private static boolean playerHit() {
 		System.out.println("You have chosen to hit.");
-		
-	}
-	
-	private static void dealerHit() {
-		//dealer must hit until 17+
-		//if dealer busts, you win
-		//but if dealer busts, and has an Ace, then he continues with ace = 1
-		StringTokenizer total = new StringTokenizer(house.total(),"/");
-		int value = Integer.parseInt(total.nextToken());
-		int aceValue = 0;
-		if(total.hasMoreTokens())
-			aceValue = Integer.parseInt(total.nextToken());
-		if(aceValue != 0){
-			while(aceValue > 17)
-			{
-				System.out.println("The dealer hits...");
-				house.addCard(deck.getNextCard());
-				System.out.println("The dealer has [" + house.readHand() + "], total value: [" + house.total() + "].");
-
-			}
-			if(aceValue > 21){
-				
-			}
+		player.addCard(deck.getNextCard());
+		System.out.println("You now have [" + player.readHand() + "], total value: [" + player.total() + "].");
+		if(player.value() > 21){
+			System.out.println("Bust! You lose!");
+			System.out.println("You now have $" + player.getMoney() + ".");
+			return false;
+		}
+		else{
+			displayOptions();
+			return true;
 		}
 	}
 	
+	private static void houseHit() {
+		while(house.value() < 17){
+			System.out.println("The house hits...");
+			house.addCard(deck.getNextCard());
+			System.out.println("The house has [" + house.readHand() + "], total value: [" + house.total() + "].");
+		}
+	}
+	
+	private static boolean askPlayAgain() {
+		while(true){
+			System.out.println("Play again? Y/N");
+			String input = "";
+			try {
+				input = br.readLine();
+			}
+			catch (IOException ioe) {
+				System.out.println("Error reading Y/N input!");
+				System.exit(1);
+			}
+			if(input.equalsIgnoreCase("yes") || input.equalsIgnoreCase("y")){
+				return true;
+			}
+			else if(input.equalsIgnoreCase("no") || input.equalsIgnoreCase("n")){
+				return false;
+			}
+			else {
+				System.out.println("Please enter yes or no.");
+			}
+		}
+	}
 }
