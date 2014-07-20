@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.StringTokenizer;
 
 public class Blackjack {
 	private static Player player;
@@ -72,11 +73,11 @@ public class Blackjack {
 		//shuffle deck, then deal first cards
 		deck.shuffle();
 		player.addCard(deck.getNextCard());
+		System.out.println("You were dealt [" + player.readHand() + "].");
 		house.addCard(deck.getNextCard());
-		player.addCard(deck.getNextCard());
-		
+		System.out.println("The dealer was dealth [" + house.readHand() + "], value: [" + house.total() + "].");
+		player.addCard(deck.getNextCard());		
 		System.out.println("You were dealt [" + player.readHand() + "], total value: [" + player.total() + "].");
-		System.out.println("The dealer has a [" + house.readHand() + "], value: [" + house.total() + "].");
 		System.out.println();
 	}
 	
@@ -125,6 +126,23 @@ public class Blackjack {
 		//dealer must hit until 17+
 		//if dealer busts, you win
 		//but if dealer busts, and has an Ace, then he continues with ace = 1
+		StringTokenizer total = new StringTokenizer(house.total(),"/");
+		int value = Integer.parseInt(total.nextToken());
+		int aceValue = 0;
+		if(total.hasMoreTokens())
+			aceValue = Integer.parseInt(total.nextToken());
+		if(aceValue != 0){
+			while(aceValue > 17)
+			{
+				System.out.println("The dealer hits...");
+				house.addCard(deck.getNextCard());
+				System.out.println("The dealer has [" + house.readHand() + "], total value: [" + house.total() + "].");
+
+			}
+			if(aceValue > 21){
+				
+			}
+		}
 	}
 	
 }
