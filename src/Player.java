@@ -41,7 +41,8 @@ public class Player {
 	public String readHand() {
 		if(hand.size() == 1) {
 			return hand.get(0).readCard();
-		} else if(hand.size()==2){
+		} 
+		else if(hand.size() == 2){
 			return hand.get(0).readCard() + " and " + hand.get(1).readCard();
 		} 
 		else {
@@ -83,7 +84,7 @@ public class Player {
 	
 	//helper methods
 	private boolean hasAce() {
-		for(Card c : hand){
+		for(Card c : hand) {
 			if(c.getRank().toString() == "Ace")
 				return true;
 		}

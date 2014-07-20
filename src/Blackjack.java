@@ -1,5 +1,4 @@
 import java.io.*;
-import java.util.*;
 
 public class Blackjack {
 	private static Player player;
@@ -63,7 +62,7 @@ public class Blackjack {
 		System.out.println("How much will you bet?");
 		try {
 			betAmount = Integer.parseInt(br.readLine());
-		} catch(IOException ioe) {
+		} catch(Exception ioe) {
 			System.out.println("Error trying to read bet amount!");
 			System.exit(1);
 		}
@@ -89,8 +88,36 @@ public class Blackjack {
 			//Not implemented yet
 			//System.out.println("3. Split");
 		}
+		int playerChoice = 0;
+		while(!(playerChoice == 1 || playerChoice == 2)){
+			try{
+				playerChoice = Integer.parseInt(br.readLine());
+				switch(playerChoice){
+					case(1):
+						playerStand();
+					break;
+					case(2):
+						playerHit();
+					break;
+					default:
+						System.out.println("Not an option! Please enter 1 or 2.");
+					break;
+				}
+			} catch(Exception ioe) {
+				System.out.println("Error reading choice option!");
+				System.exit(1);
+			}
+		}
 		
 	}
 	
+	private static void playerStand() {
+		System.out.println("You have chosen to stand.");
+		
+	}
+	
+	private static void playerHit() {
+		System.out.println("You have chosen to hit.");
+	}
 	
 }
