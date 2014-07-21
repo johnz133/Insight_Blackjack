@@ -53,6 +53,9 @@ public class Player {
 		return hand.get(index);
 	}
 	
+	public Card getLastCard() {
+		return hand.get(hand.size()-1);
+	}
 	//Override hashcode and equals method to correctly compare hands for hashset
 	@Override
 	public int hashCode() {
