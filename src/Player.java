@@ -1,6 +1,5 @@
 import java.util.*;
 
-
 public class Player {
 	private String name;
 	private int money;
@@ -36,6 +35,10 @@ public class Player {
 		higherValue = 0;
 	}
 	
+	public Card removeCard(int index) {
+		return hand.remove(index);
+	}
+	
 	//Get methods
 	public String getName() {
 		return name;
@@ -44,7 +47,31 @@ public class Player {
 	public int getMoney() {
 		return money;
 	}
-		
+	
+	public Card getCard(int index) {
+		return hand.get(index);
+	}
+	
+	@Override
+	public int hashCode() {
+		final int PRIME = 61;
+		int result = 1;
+		result = PRIME^(hand.get(0).getSuit().getValue()) + PRIME*(hand.get(0).getRank().getValue());
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object player) {
+		if(player == null)
+			return false;
+		if(player == this)
+			return true;
+		if(player.getClass() != this.getClass())
+			return false;
+		Player p = (Player) player;
+		return (this.getName() == p.getName());
+	}
+	
 	public String readHand() {
 		if(hand.size() == 1) {
 			return hand.get(0).readCard();

@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.*;
 
 public class Blackjack {
 	private static Player player;
@@ -6,6 +7,7 @@ public class Blackjack {
 	private static BufferedReader br;
 	private static Deck deck;
 	private static int betAmount;
+	private static Set<Player> splitHands;
 	/*
 	 * Insight Data Engineering Fellows Program - Coding Challenge
 	We'd like you to implement a text-based Blackjack (http://en.wikipedia.org/wiki/Blackjack) 
@@ -33,10 +35,21 @@ public class Blackjack {
 		//Game loop
 		while(player.getMoney() > 0 && playAgain) {
 			startRound();
-			playerMove();
+			playerMove(player);
+			houseHit();
+			if(splitHands.isEmpty()){
+				compareHands(player);
+			}
+			else{
+				Iterator<Player> iter = splitHands.iterator();
+				while(iter.hasNext()) {
+					compareHands(iter.next());
+				}
+			}
 			playAgain = askPlayAgain();
 		}
-		
+		System.out.println("Thanks for playing, " + player.getName() + "!");
+		System.out.println("Come back again!");
 	}
 	
 	//Initialize player and house
@@ -53,12 +66,13 @@ public class Blackjack {
 		}
 		player.setMoney(100);
 		deck = new Deck();
+		splitHands = new HashSet<Player>();
 	}
 	
 	private static void startRound() {
 		player.clearHand();
 		house.clearHand();
-		//set the bet
+		splitHands.clear();
 		betAmount = 0;
 		System.out.println("You're current total is $" + player.getMoney() + ", " + player.getName() +".");
 		System.out.println("How much will you bet?");
@@ -82,11 +96,11 @@ public class Blackjack {
 		System.out.println();
 	}
 	
-	private static void playerMove() {
+	private static Player playerMove(Player hand) {
 		displayOptions();
-		if(player.canSplit()){
+		if(hand.canSplit()){
 			//Not implemented yet
-			//System.out.println("3. Split");
+			System.out.println("3. Split");
 		}
 		int playerChoice = 0;
 		boolean playerAlive = true;
@@ -95,21 +109,29 @@ public class Blackjack {
 				playerChoice = Integer.parseInt(br.readLine());
 				switch(playerChoice){
 					case(1):
-						playerStand();
+						playerStand(hand);
+						playerAlive = false;
 					break;
 					case(2):
-						playerAlive = playerHit();
+						playerAlive = playerHit(hand);
+					break;
+					case(3):
+						if(!hand.canSplit())
+							System.out.println("Please enter a valid option.");
+						else{
+							playerSplit(hand);
+							playerAlive = false;
+						}
 					break;
 					default:
-						System.out.println("Not an option! Please enter 1 or 2.");
 					break;
 				}
-			} catch(IOException ioe) {
+			} catch(IOException e) {
 				System.out.println("Error reading choice option!");
 				System.exit(1);
 			}
 		}
-		
+		return hand;
 	}
 	
 	private static void displayOptions() {
@@ -117,35 +139,47 @@ public class Blackjack {
 		System.out.println("1. Stand");
 		System.out.println("2. Hit");
 	}
-	private static void playerStand() {
-		System.out.println("You have chosen to stand at [" + player.value() + "].");
-		houseHit();
-		if(house.value() <= 21){
+	
+	private static void playerStand(Player hand) {
+		System.out.println("You have chosen to stand at [" + hand.value() + "].");
+		/*if(hand.getName() == player.getName()) {
+			System.out.println("Comparing your hand with [" + hand.readHand() + "]...");
+			houseHit();
+			compareHands(hand);
+		}*/
+	}
+	
+	private static void compareHands(Player hand) {
+		System.out.println("Comparing [" + hand.readHand() + "], value: [" + hand.value() +"]...");
+		if(hand.value() > 21){
+			System.out.println("This hand busted already..");
+		}
+		if(house.value() <= 21 && hand.value() <= 21){
 			System.out.println("The house stands at [" + house.value() + "].");
-			if(player.value() < house.value()) {
+			if(hand.value() < house.value()) {
 				System.out.println("You lose.");
 			}
-			else if(player.value() > house.value()){
-				System.out.println("You win!");
+			else if(hand.value() > house.value()){
+				System.out.println("You win $" + betAmount*2 + "!");
 				player.setMoney(player.getMoney() + betAmount*2);
 			}
 			else {
-				System.out.println("Draw!");
+				System.out.println("Draw! $" + betAmount + " returned.");
 				player.setMoney(player.getMoney() + betAmount);
 			}
 		}
-		else {
-			System.out.println("The house busts! You win!");
+		else if(hand.value() <= 21 ) {
+			System.out.println("The house busts! You win $" + betAmount*2 + "!");
 			player.setMoney(player.getMoney() + betAmount*2);
 		}
 		System.out.println("You now have $" + player.getMoney() + ".");
 	}
 	
-	private static boolean playerHit() {
+	private static boolean playerHit(Player hand) {
 		System.out.println("You have chosen to hit.");
-		player.addCard(deck.getNextCard());
-		System.out.println("You now have [" + player.readHand() + "], total value: [" + player.value() + "].");
-		if(player.value() > 21){
+		hand.addCard(deck.getNextCard());
+		System.out.println("You now have [" + hand.readHand() + "], total value: [" + hand.value() + "].");
+		if(hand.value() > 21){
 			System.out.println("Bust! You lose!");
 			System.out.println("You now have $" + player.getMoney() + ".");
 			return false;
@@ -154,6 +188,25 @@ public class Blackjack {
 			displayOptions();
 			return true;
 		}
+	}
+	
+	private static void playerSplit(Player hand) {
+		//play first hand
+		//play second hand
+		System.out.println("You've chosen to split your [" + hand.readHand() + "].");
+		Player split = new Player(hand.getCard(0).readCard(), 0);
+		split.addCard(hand.removeCard(0));
+		split.addCard(deck.getNextCard());
+		System.out.println("You're current hand now has [" + split.readHand() + "], value: [" + split.value() + "], with a bet amount of $" + betAmount + ".");
+		split = playerMove(split);
+		
+		hand.addCard(deck.getNextCard());
+		System.out.println("You're next hand has [" + hand.readHand() + "], value: [" + hand.value() + "],  with a bet amount of $" + betAmount + "." );
+		hand.setName(hand.getCard(0).readCard());
+		hand = playerMove(hand);
+		
+		splitHands.add(split);
+		splitHands.add(hand);
 	}
 	
 	private static void houseHit() {
@@ -175,10 +228,10 @@ public class Blackjack {
 				System.out.println("Error reading Y/N input!");
 				System.exit(1);
 			}
-			if(input.equalsIgnoreCase("yes") || input.equalsIgnoreCase("y")){
+			if(input.equalsIgnoreCase("yes") || input.equalsIgnoreCase("y")) {
 				return true;
 			}
-			else if(input.equalsIgnoreCase("no") || input.equalsIgnoreCase("n")){
+			else if(input.equalsIgnoreCase("no") || input.equalsIgnoreCase("n")) {
 				return false;
 			}
 			else {
