@@ -38,9 +38,11 @@ public class Blackjack {
 			startRound();
 			playerMove(player);
 			houseHit();
+			//If no split, compare current hand
 			if(splitHands.isEmpty()){
 				compareHands(player);
 			}
+			//If split exists, then we compare each hand
 			else{
 				Iterator<Player> iter = splitHands.iterator();
 				while(iter.hasNext()) {
@@ -81,6 +83,10 @@ public class Blackjack {
 		System.out.println("How much will you bet?");
 		try {
 			betAmount = Integer.parseInt(br.readLine());
+			while(betAmount < 1){
+				System.out.println("You must bet at least $1.");
+				betAmount = Integer.parseInt(br.readLine());
+			}
 		} catch(Exception e) {
 			System.out.println("Error trying to read bet amount!");
 			System.exit(1);
@@ -98,18 +104,28 @@ public class Blackjack {
 		System.out.println("You were dealt [" + player.readHand() + "], total value: [" + player.total() + "].");
 	}
 	
+	//Player choice loop.
+	//1. Stops when player stands
+	//2. Deals player a new card, check if busted
+	//3. Split equal value cards.
+	//4. Double Down
+	
+	//Note: playerAlive checks to see if player is alive, or able, to continue 
+	//choosing the next move.
 	private static Player playerMove(Player hand) {
-		displayOptions();
-		if(hand.canSplit()){
-			//Not implemented yet
+		displayOptions(hand);
+		if(hand.canSplit())
 			System.out.println("3. Split");
-		}
-		int playerChoice = 0;
+		int playerChoice = -1;
 		boolean playerAlive = true;
-		while(!(playerChoice == 1) && playerAlive){
+		while(!(playerChoice == 1 || playerChoice == 0) && playerAlive){
 			try{
 				playerChoice = Integer.parseInt(br.readLine());
 				switch(playerChoice){
+					case(0):
+						playerDoubleDown(hand);
+						playerAlive = false;
+					break;
 					case(1):
 						playerStand(hand);
 						playerAlive = false;
@@ -128,7 +144,7 @@ public class Blackjack {
 					default:
 					break;
 				}
-			} catch(IOException e) {
+			} catch(Exception e) {
 				System.out.println("Error reading choice option!");
 				System.exit(1);
 			}
@@ -136,25 +152,34 @@ public class Blackjack {
 		return hand;
 	}
 	
-	private static void displayOptions() {
+	//Display the standard options.
+	private static void displayOptions(Player hand) {
 		System.out.println("Choose move (enter option number): ");
+		if(hand.canDoubleDown())
+			System.out.println("0. Double Down");
 		System.out.println("1. Stand");
 		System.out.println("2. Hit");
 	}
 	
-	private static void playerStand(Player hand) {
-		System.out.println("You have chosen to stand at [" + hand.value() + "].");
-		/*if(hand.getName() == player.getName()) {
-			System.out.println("Comparing your hand with [" + hand.readHand() + "]...");
-			houseHit();
-			compareHands(hand);
-		}*/
+	private static void playerDoubleDown(Player hand){
+		System.out.println("You have chosen to double down at [" + hand.value() + "].");
+		player.setMoney(player.getMoney() - betAmount);
+		System.out.println("An additional $" + betAmount +" was placed. Your current money: $" + player.getMoney());
+		betAmount *= 2;
+		hand.addCard(deck.getNextCard());
+		System.out.println("Your hand now has [" + hand.readHand() + "], total value: [" + hand.value() + "].");
 	}
 	
+	//Prints out player's final value for this hand
+	private static void playerStand(Player hand) {
+		System.out.println("You have chosen to stand at [" + hand.value() + "].");
+	}
+	
+	//Compare hand to dealer's card values and update money
 	private static void compareHands(Player hand) {
 		System.out.println("Comparing [" + hand.readHand() + "], value: [" + hand.value() +"]...");
 		if(hand.value() > 21){
-			System.out.println("This hand busted already..");
+			System.out.println("This hand busted..");
 		}
 		if(house.value() <= 21 && hand.value() <= 21){
 			System.out.println("The house stands at [" + house.value() + "].");
@@ -177,24 +202,24 @@ public class Blackjack {
 		System.out.println("You now have $" + player.getMoney() + ".");
 	}
 	
+	//Deals player a new card
 	private static boolean playerHit(Player hand) {
 		System.out.println("You have chosen to hit.");
 		hand.addCard(deck.getNextCard());
 		System.out.println("You now have [" + hand.readHand() + "], total value: [" + hand.value() + "].");
 		if(hand.value() > 21){
-			System.out.println("Bust! You lose!");
-			System.out.println("You now have $" + player.getMoney() + ".");
+			System.out.println("Bust! No more moves available for hand.");
 			return false;
 		}
 		else{
-			displayOptions();
+			displayOptions(hand);
 			return true;
 		}
 	}
 	
+	//Recursive split method. Split the two cards into two hands.
+	//After playing each hand, we add it to the set of hands to be compared later.
 	private static void playerSplit(Player hand) {
-		//play first hand
-		//play second hand
 		System.out.println("You've chosen to split your [" + hand.readHand() + "].");
 		Player split = new Player(hand.getCard(0).readCard(), 0);
 		split.addCard(hand.removeCard(0));
@@ -211,6 +236,7 @@ public class Blackjack {
 		splitHands.add(hand);
 	}
 	
+	//AI for the house hit. Hit until hand value is greater than 17.
 	private static void houseHit() {
 		while(house.value() < 17){
 			System.out.println("The house hits...");
@@ -219,6 +245,7 @@ public class Blackjack {
 		}
 	}
 	
+	//Ask the player to play again. 
 	private static boolean askPlayAgain() {
 		while(true){
 			System.out.println("Play again? Y/N");

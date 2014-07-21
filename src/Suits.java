@@ -12,7 +12,8 @@ public enum Suits {
 		this.value = value;
 	}
 	
-	//return the integer value of the rank
+	//return integer value of suit
+	//arbitrary in blackjack. Used to calculate hashcode
 	public int getValue(){
 		return value;
 	}

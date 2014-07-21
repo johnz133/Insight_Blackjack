@@ -8,7 +8,8 @@ public class Player {
 	private int value;
 	private int higherValue;
 	
-	public Player(String name, int money) {
+	//Constructor for the player class
+	Player(String name, int money) {
 		this.name = name;
 		this.money = money;
 		hand = new ArrayList<Card>();
@@ -52,6 +53,7 @@ public class Player {
 		return hand.get(index);
 	}
 	
+	//Override hashcode and equals method to correctly compare hands for hashset
 	@Override
 	public int hashCode() {
 		final int PRIME = 61;
@@ -72,6 +74,8 @@ public class Player {
 		return (this.getName() == p.getName());
 	}
 	
+	
+	//Read the hand in English
 	public String readHand() {
 		if(hand.size() == 1) {
 			return hand.get(0).readCard();
@@ -89,7 +93,7 @@ public class Player {
 		}
 	}
 	
-	//return the total value(s) of the hand, depending on ace
+	//return a string of total value(s) of the hand, depending on ace
 	//updates value and higherValue
 	public String total() {
 		value = 0;
@@ -116,13 +120,15 @@ public class Player {
 		return (workingAce > 0) ? "" + value + "/" + higherValue : "" + value;
 	}
 	
-	//returns the higher of the two values
+	//returns the higher of the two values in integer form
 	public int value() {
 		total();
 		return (higherValue > 0 && higherValue <= 21) ? higherValue : value;
 	}
 	
 	//helper methods
+	
+	//Count the number of aces in the hand
 	private int countAce() {
 		numAce = 0;
 		for(Card c : hand) {
@@ -132,7 +138,13 @@ public class Player {
 		return numAce;
 	}
 	
+	//check to see if the hand can currently be split
+	//equal value cards are split-able
 	public boolean canSplit() {
 		return hand.size() == 2 && hand.get(0).getValue() == hand.get(1).getValue();
+	}
+	
+	public boolean canDoubleDown() {
+		return hand.size() == 2;
 	}
 }
