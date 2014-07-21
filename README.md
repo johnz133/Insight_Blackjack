@@ -1,4 +1,4 @@
 Insight_Blackjack
 =================
 A text-based Blackjack game written in Java for Insight Data Engineering Fellows Program. 
-Implemented splitting feature, equal value cards are split-able.
+Implemented doubling down feature and equal-value splitting feature.
