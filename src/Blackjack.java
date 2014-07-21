@@ -28,6 +28,7 @@ public class Blackjack {
 	//Split
 	//double down
 	
+	//Main game program
 	public static void main(String [] args) {
 		br = new BufferedReader(new InputStreamReader(System.in));
 		boolean playAgain = true;
@@ -52,7 +53,7 @@ public class Blackjack {
 		System.out.println("Come back again!");
 	}
 	
-	//Initialize player and house
+	//Initialize variables, display welcome message
 	private static void initialize() {
 		player = new Player("Player", 100);
 		house = new Player("House", 100);
@@ -69,6 +70,8 @@ public class Blackjack {
 		splitHands = new HashSet<Player>();
 	}
 	
+	//Begin new round. All data from last round is cleared. 
+	//Ask for wager, reshuffle the deck, then deal cards.
 	private static void startRound() {
 		player.clearHand();
 		house.clearHand();
@@ -93,7 +96,6 @@ public class Blackjack {
 		System.out.println("The house was dealt [" + house.readHand() + "], value: [" + house.total() + "].");
 		player.addCard(deck.getNextCard());		
 		System.out.println("You were dealt [" + player.readHand() + "], total value: [" + player.total() + "].");
-		System.out.println();
 	}
 	
 	private static Player playerMove(Player hand) {
