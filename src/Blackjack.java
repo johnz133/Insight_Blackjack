@@ -8,25 +8,6 @@ public class Blackjack {
 	private static Deck deck;
 	private static int betAmount;
 	private static Set<Player> splitHands;
-	/*
-	 * Insight Data Engineering Fellows Program - Coding Challenge
-	We'd like you to implement a text-based Blackjack (http://en.wikipedia.org/wiki/Blackjack) 
-	program in one of the following programming languages: Java, Clojure, Scala, C, C++, 
-	Python or Ruby. There should be one player and one dealer. The dealer should hit 
-	until his hand value is 17 or greater. You should implement the basic actions of 
-	hitting and standing. Implementing the more advanced actions such as splitting is 
-	optional. The player should start with 100 chips and must bet at least 1 chip each 
-	hand.
-	Any additional game play features are optional, but welcome.
-	 */
-	//Require:
-	//Stand/hit
-	//House AI
-	//Start with 100
-	//At least 1 per hand
-	//Optional:
-	//Split
-	//double down
 	
 	//Main game program
 	public static void main(String [] args) {
