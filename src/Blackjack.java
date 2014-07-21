@@ -125,7 +125,7 @@ public class Blackjack {
 					default:
 					break;
 				}
-			} catch(Exception e) {
+			} catch(IOException ioe) {
 				System.out.println("Error reading choice option!");
 				System.exit(1);
 			}
